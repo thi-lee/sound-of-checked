@@ -4,14 +4,21 @@
     --beige-project-background: #f5f5dc;
     --eggshell-task-background: #f0ead6;
     --bone-task-hover: #e3dac9;
+    --project-width: 200px;
+    --task-width: calc(var(--project-width) - 20px);
 }
 
 html, body {
     font-family: 'Open Sans', sans-serif;
 }
 
+.header {
+    display: flex;
+    justify-content: center;
+}
+
 .project {
-    width: 170px;
+    width: var(--project-width);
     background-color: var(--beige-project-background);
     border-radius: 10px;
     padding: 0 10px 10px;
@@ -64,7 +71,7 @@ html, body {
     height: 25px;
     background-color: var(--eggshell-task-background);
     border-radius: 10px;
-    width: 150px;
+    width: var(--task-width);
     padding: 5px 10px 5px 10px;
     text-align: left;
     display: flex;

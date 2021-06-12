@@ -1,4 +1,5 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: 'development',
@@ -7,6 +8,14 @@ module.exports = {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+        title: 'Checked?',
+        hash: true,
+        filename: './index.html',
+        favicon: './src/favicon.png',
+    })
+  ],
   devtool: 'inline-source-map',
   devServer: {
     contentBase: './dist',
