@@ -1,12 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
 
+:root {
+    --beige-project-background: #f5f5dc;
+    --eggshell-task-background: #f0ead6;
+    --bone-task-hover: #e3dac9;
+}
+
 html, body {
     font-family: 'Open Sans', sans-serif;
 }
 
 .project {
-    width: 120px;
-    background-color: #f5f5dc;
+    width: 170px;
+    background-color: var(--beige-project-background);
     border-radius: 10px;
     padding: 0 10px 10px;
     display: flex;
@@ -32,12 +38,12 @@ html, body {
     border: none;
     padding: 8px;
     border-radius: 10px;
-    background-color: #f0ead6;
+    background-color: var(--eggshell-task-background);
 }
 
 .btn:hover {
     cursor: pointer;
-    background-color: #e3dac9;
+    background-color: var(--bone-task-hover);
 }
 
 .project-title {
@@ -55,17 +61,44 @@ html, body {
 }
 
 .task {
-    background-color: #f0ead6;
+    height: 25px;
+    background-color: var(--eggshell-task-background);
     border-radius: 10px;
-    width: 100px;
+    width: 150px;
     padding: 5px 10px 5px 10px;
     text-align: left;
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    margin-bottom: 10px;
+}
+
+.task-title {
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
 .task:hover {
     cursor: pointer;
-    background-color: #e3dac9;
+    background-color: var(--bone-task-hover);
+}
+
+.task-label::before {
+    content: "\A";
+    white-space: pre;
+}
+
+.add-task {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.task-input {
+    background: transparent;
+    border: none;
+}
+
+.task-input:focus {
+    outline: none;
 }
