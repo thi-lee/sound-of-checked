@@ -10,6 +10,20 @@
 
 html, body {
     font-family: 'Open Sans', sans-serif;
+    padding: 0px 20px;
+}
+
+.main {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: baseline;
+    overflow: auto;
+    white-space: nowrap;
+}
+
+.main::-webkit-scrollbar {
+    display: none;
 }
 
 .header {
@@ -21,11 +35,11 @@ html, body {
     width: var(--project-width);
     background-color: var(--beige-project-background);
     border-radius: 10px;
-    padding: 0 10px 10px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    margin: 10px;
+    margin: 20px;
 }
 
 .project-header {
@@ -33,6 +47,13 @@ html, body {
     flex-direction: row;
     justify-content: space-between;
     width: 100%;
+}
+
+.add-project {
+    cursor: pointer;
+    justify-content: center;
+    width: 200px;
+    height: 45px;
 }
 
 .add-task {
