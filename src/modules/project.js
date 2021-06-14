@@ -1,5 +1,12 @@
 const taskItem = () => {
 
+    const validClassName = (id, projectTitle) => {
+        let result = projectTitle.toLowerCase();
+        result = result.split(" ");
+        result = result.push(id.toString());
+        return result.join("-");
+    }
+
     const checkboxIcon = () => {
       const checkbox = document.createElement('div');
       checkbox.classList.add('checkbox');
@@ -11,6 +18,10 @@ const taskItem = () => {
         const task = document.createElement('div');
         task.classList.add('task');
         return task;
+    }
+
+    const isProject = () => {
+
     }
 
     /*
@@ -43,18 +54,20 @@ const taskItem = () => {
             e.preventDefault();
             if (e.keyCode === 13) {
                 task.style.display = 'none';
-                addTask(input.value, project);
+                addTask(input.value, project, project.id);
             }
         })
         
         // (3)
-        task.appendChild(input).classList.add('task-input');
+        task.appendChild(input).classList.add('input', 'task-input');
 
         // (4)
-        const realTask = document.querySelector('.real-task');
+        const realTask = document.querySelector(`.real-task`);
         if (realTask != null) {
+            console.log('realtask != null')
             project.insertBefore(task, realTask);
         } else {
+            console.log('realtask == null')
             project.appendChild(task);
         }
         return input;
@@ -65,7 +78,7 @@ const taskItem = () => {
                     and append this task to project
     */
     const addTask = (input, project) => {
-        const realTask = document.querySelector('.real-task');
+        const realTask = document.querySelector(`.real-task`);
         const task = taskTab();
         const title = document.createElement('p');
         if (input.length > 17) {
@@ -85,32 +98,56 @@ const taskItem = () => {
 exports.projectBoard = () => {
 
     /*
-    Responsibility: create a project (including project header and an add-task button)
-                    listen to event on add-task button
+    Responsibility: project tab skeleton
     */
-    const createProject = (title) => {
+    const projectTab = () => {
         const project = document.createElement('div');
-        const projectHeader = document.createElement('div');
-        
-        const projectTitle = document.createElement('h3');
-        projectTitle.innerHTML = title; 
-        projectHeader.appendChild(projectTitle).classList.add('project-title');
+        project.classList.add('project');
 
-        if (title == '<i class="fa fa-plus"></i>') {
-            project.appendChild(projectHeader).classList.add('project-header', 'add-project');
-        } else {
-            project.appendChild(projectHeader).classList.add('project-header');
-            taskItem().addTaskBtn(project);
-        }
-        return project;
+        const projectHeader = document.createElement('div');
+        projectHeader.classList.add('project-header')
+        const projectTitle = document.createElement('h3');
+        projectHeader.appendChild(projectTitle).classList.add('project-title');
+        project.appendChild(projectHeader);
+        
+        return { project, projectHeader, projectTitle };
+    }
+
+    /*
+    Every project, except add-project button, will have an add-task button
+    Responsibility: 
+    */
+    const createProject = () => {
+        const tab = projectTab();
+        tab.project.setAttribute('id', 'project-1');
+        tab.projectTitle.innerHTML = 'Project 1';
+        taskItem().addTaskBtn(tab.project);
+        return tab;
     }
 
     const addProjectBtn = () => {
-        const project = createProject('<i class="fa fa-plus"></i>');
-        project.addEventListener('click', () => {
-            document.querySelector('.main').insertBefore(createProject('Project 2'), project).classList.add('project');
+        const tab = projectTab();
+        tab.projectTitle.innerHTML = '<i class="fa fa-plus"></i>';
+        tab.projectHeader.classList.add('add-project');
+        tab.project.addEventListener('click', () => projectInput(tab))
+        return tab;
+    }
+
+    const projectInput = (tab) => {
+        const input = document.createElement('input');
+        input.setAttribute('type', 'text');
+
+        const newTab = projectTab();
+        newTab.projectTitle.appendChild(input).classList.add('input', 'project-input');
+        document.querySelector('.main').insertBefore(newTab.project, tab.project);
+
+        input.addEventListener('keyup', e => {
+            e.preventDefault();
+            if (e.keyCode === 13) {
+                newTab.projectTitle.innerHTML = input.value;
+                taskItem().addTaskBtn(newTab.project);
+            }
         })
-        return project;
     }
     
     return { createProject, addProjectBtn }

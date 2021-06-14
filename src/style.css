@@ -46,7 +46,8 @@ html, body {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    width: 100%;
+    /* width: 100%; */
+    width: 200px;
 }
 
 .add-project {
@@ -122,11 +123,11 @@ html, body {
     justify-content: center;
 }
 
-.task-input {
+.input {
     background: transparent;
     border: none;
 }
 
-.task-input:focus {
+.input:focus {
     outline: none;
 }
