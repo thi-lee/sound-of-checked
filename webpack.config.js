@@ -10,7 +10,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-        title: 'Checked?',
+        title: 'Sound of checked',
         hash: true,
         filename: './index.html',
         favicon: './src/favicon.png',

@@ -8,7 +8,6 @@ const taskItem = () => {
         return task;
     }
 
-    // TODO: edit event on event listener
     const checkboxIcon = () => {
         const checkbox = document.createElement('div');
         checkbox.classList.add('checkbox');
@@ -87,10 +86,6 @@ const taskItem = () => {
         task.appendChild(checkboxIcon());
         task.appendChild(title).classList.add('task-title');
         project.insertBefore(task, realTask).classList.add('real-task', `${project.classList[1]}`);
-    }
-
-    const removeTask = () => {
-
     }
   
     return { addTaskBtn }
