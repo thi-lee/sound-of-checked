@@ -1,16 +1,29 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&family=Satisfy&display=swap');
 
 :root {
-    --beige-project-background: #f5f5dc;
-    --eggshell-task-background: #f0ead6;
-    --bone-task-hover: #e3dac9;
+    --beige-project-background: rgba(255, 255, 255, 0.5);
+    --text-color: #1a2311;
+    --eggshell-task-background: #d1c6ba;
+    --bone-task-hover: #c0c7c6;
     --project-width: 200px;
     --task-width: calc(var(--project-width) - 20px);
 }
 
 html, body {
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Roboto Mono', monospace;
     padding: 0px 20px;
+    color: var(--text-color);
+}
+
+body {
+    background-image: url("https://picsum.photos/id/128/3000/3000");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: scroll;
+}
+
+h1 {
+    font: bold 70px 'Satisfy', cursive;
 }
 
 .main {
@@ -34,7 +47,7 @@ html, body {
 .project {
     width: var(--project-width);
     background-color: var(--beige-project-background);
-    border-radius: 10px;
+    border-radius: 5px;
     padding: 10px;
     display: flex;
     flex-direction: column;
@@ -66,7 +79,7 @@ html, body {
 .btn {
     border: none;
     padding: 8px;
-    border-radius: 10px;
+    border-radius: 5px;
     background-color: var(--eggshell-task-background);
 }
 
@@ -85,15 +98,15 @@ html, body {
     cursor: pointer;
     width: 15px;
     height: 15px;
-    border-radius: 5px;
-    border: 2px solid black;
+    border-radius: 50%;
+    border: 2px solid var(--text-color);
     margin-right: 5px;
 }
 
 .task {
     height: 25px;
     background-color: var(--eggshell-task-background);
-    border-radius: 10px;
+    border-radius: 5px;
     width: var(--task-width);
     padding: 5px 10px 5px 10px;
     text-align: left;
@@ -113,6 +126,10 @@ html, body {
     background-color: var(--bone-task-hover);
 }
 
+.strike-through {
+    text-decoration: line-through;
+}
+
 .task-label::before {
     content: "\A";
     white-space: pre;
@@ -125,10 +142,16 @@ html, body {
 }
 
 .input {
+    font-family: 'Roboto Mono', monospace;
     background: transparent;
     border: none;
 }
 
 .input:focus {
     outline: none;
+}
+
+.project-input {
+    font-size: 20px;
+    padding: 0;
 }

@@ -10,10 +10,13 @@ const taskItem = () => {
 
     // TODO: edit event on event listener
     const checkboxIcon = () => {
-      const checkbox = document.createElement('div');
-      checkbox.classList.add('checkbox');
-      checkbox.addEventListener('click', () => {
-          
+        const checkbox = document.createElement('div');
+        checkbox.classList.add('checkbox');
+        checkbox.addEventListener('click', () => {
+            const checkboxParent = checkbox.parentNode;
+            const sibling = checkbox.nextElementSibling;
+            sibling.classList.add('strike-through');
+            setTimeout(() => checkboxParent.remove(), 500);
       })
       return checkbox;
     }
@@ -48,8 +51,7 @@ const taskItem = () => {
         input.addEventListener('keyup', (e) => {
             e.preventDefault();
             if (e.keyCode === 13) {
-                task.style.display = 'none';
-                addTask(input.value, project, project.id);
+                addTask(task, input.value, project);
             }
         })
         
@@ -72,16 +74,16 @@ const taskItem = () => {
     Responsibility: append checkbox & input task title (realTask) to task 
                     and append this task to project
     */
-    const addTask = (input, project) => {
+    const addTask = (task, input, project) => {
         const realTask = document.querySelector(`div.${project.classList[1]}.real-task`);
-        const task = taskTab();
         const title = document.createElement('p');
-        if (input.length > 17) {
-            input = input.slice(0, 17) + '...';
+        if (input.length > 13) {
+            input = input.slice(0, 13) + '...';
         } else if (input.length == 0) {
             input = "Untitled";
         }
         title.textContent = input;
+        task.innerHTML = '';
         task.appendChild(checkboxIcon());
         task.appendChild(title).classList.add('task-title');
         project.insertBefore(task, realTask).classList.add('real-task', `${project.classList[1]}`);
@@ -91,7 +93,7 @@ const taskItem = () => {
 
     }
   
-    return { addTaskBtn, checkboxIcon }
+    return { addTaskBtn }
 }
 
 exports.projectBoard = () => {
@@ -119,8 +121,7 @@ exports.projectBoard = () => {
     const createProject = () => {
         const tab = projectTab();
         tab.project.setAttribute('id', 'project-1');
-        tab.projectTitle.innerHTML = 'Project 1';
-        tab.projectHeader.appendChild(taskItem().checkboxIcon());
+        tab.projectTitle.innerHTML = "Summer '21";
         const uniq = 'id' + (new Date()).getTime();
         getProjectId(tab.project, uniq);
         taskItem().addTaskBtn(tab.project);
@@ -147,7 +148,6 @@ exports.projectBoard = () => {
         input.addEventListener('keyup', e => {
             e.preventDefault();
             if (e.keyCode === 13) {
-                newTab.projectHeader.appendChild(taskItem().checkboxIcon());
                 newTab.projectTitle.innerHTML = input.value;
                 const uniq = 'id' + (new Date()).getTime();
                 getProjectId(newTab.project, uniq)

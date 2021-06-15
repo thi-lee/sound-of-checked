@@ -1,2 +1,4 @@
-# sound-of-checked
-Checked! 
+# Sound of checked! 
+
+![Sound of checked Demo](demo/app-demo.gif)
+
