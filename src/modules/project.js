@@ -1,4 +1,20 @@
-const projects = [];
+let allProjects = [];
+
+console.log(allProjects);
+
+let tasks = [];
+
+const taskObj = (parent, title) => {
+    const task = { 'parent': parent, 'title': title};
+    return task;
+};
+
+const projectObj = (id, title, tasks) => {
+    const project = { 'id': id, 'title': title, 'tasks': tasks.filter(task => task.parent == id) };
+    return project;
+}
+
+let projects = [];
 
 const taskItem = () => {
     // template for task tab
@@ -58,9 +74,9 @@ const taskItem = () => {
         task.appendChild(input).classList.add('input', 'task-input');
 
         // (4)
-        console.log(`div.${project.classList[1]}.real-task`)
+        // console.log(`div.${project.classList[1]}.real-task`)
         const realTask = document.querySelector(`div.${project.classList[1]}.real-task`);
-        console.log(realTask);
+        // console.log(realTask);
         if (realTask != null) {
             project.insertBefore(task, realTask);
         } else {
@@ -85,7 +101,10 @@ const taskItem = () => {
         task.innerHTML = '';
         task.appendChild(checkboxIcon());
         task.appendChild(title).classList.add('task-title');
-        project.insertBefore(task, realTask).classList.add('real-task', `${project.classList[1]}`);
+        const parent = `${project.classList[1]}`;
+        project.insertBefore(task, realTask).classList.add('real-task', parent);
+
+        tasks.push(taskObj(parent, input));
     }
   
     return { addTaskBtn }
@@ -115,7 +134,6 @@ exports.projectBoard = () => {
     */
     const createProject = () => {
         const tab = projectTab();
-        tab.project.setAttribute('id', 'project-1');
         tab.projectTitle.innerHTML = "Summer '21";
         const uniq = 'id' + (new Date()).getTime();
         getProjectId(tab.project, uniq);
@@ -153,9 +171,12 @@ exports.projectBoard = () => {
 
     const getProjectId = (project, id) => {
         projects.push(id);
-        console.log(projects);
-        project.classList.add(`project-${projects.indexOf(id)}`);
+        const projectId = `project-${projects.indexOf(id)}`
+        // console.log(projects);
+        project.classList.add(projectId);
+
+        allProjects.push(projectObj(projectId, projectId, tasks))
     }
     
     return { createProject, addProjectBtn }
-  }
+}

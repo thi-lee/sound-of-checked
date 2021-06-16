@@ -1,6 +1,7 @@
 import './style.css';
 import '@fortawesome/fontawesome-free/js/all'; 
-import { projectBoard }from './modules/project';
+import { projectBoard } from './modules/project';
+import { storage } from './modules/localStorage';
 
 const header = document.createElement('div');
 const headerText = document.createElement('h1');
