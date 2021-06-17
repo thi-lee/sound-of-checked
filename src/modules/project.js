@@ -1,20 +1,8 @@
-let allProjects = [];
+const storage = require('./localStorage');
+const setProject = storage.storage().setProject;
+const setTask = storage.storage().setTask;
 
-console.log(allProjects);
-
-let tasks = [];
-
-const taskObj = (parent, title) => {
-    const task = { 'parent': parent, 'title': title};
-    return task;
-};
-
-const projectObj = (id, title, tasks) => {
-    const project = { 'id': id, 'title': title, 'tasks': tasks.filter(task => task.parent == id) };
-    return project;
-}
-
-let projects = [];
+const projects = [];
 
 const taskItem = () => {
     // template for task tab
@@ -24,6 +12,7 @@ const taskItem = () => {
         return task;
     }
 
+    // TO-DO need to remove from local storage 
     const checkboxIcon = () => {
         const checkbox = document.createElement('div');
         checkbox.classList.add('checkbox');
@@ -36,10 +25,6 @@ const taskItem = () => {
       return checkbox;
     }
 
-    /*
-    Responsibility: append icon to task
-                    and append this task to project 
-    */
     const addTaskBtn = (project) => {
         const task = taskTab();
         task.innerHTML = '<i class="fa fa-plus"></i>';
@@ -50,61 +35,47 @@ const taskItem = () => {
         return task;
     }
 
-    /*
-    Responsibility: (1) create an input field 
-                    (2) listen to input event
-                    (3) append input value to task (above all current tasks)
-                    (4) append task to project 
-    */
-    // TODO: add correct id/className to (4)
     const taskInput = (task, project) => {
-        // (1)
         const input = document.createElement('input');
         input.setAttribute('type', 'text');
+        task.appendChild(input).classList.add('input', 'task-input');
 
-        // (2)
         input.addEventListener('keyup', (e) => {
             e.preventDefault();
             if (e.keyCode === 13) {
                 addTask(task, input.value, project);
             }
-        })
-        
-        // (3)
-        task.appendChild(input).classList.add('input', 'task-input');
+        });
 
-        // (4)
-        // console.log(`div.${project.classList[1]}.real-task`)
         const realTask = document.querySelector(`div.${project.classList[1]}.real-task`);
-        // console.log(realTask);
-        if (realTask != null) {
-            project.insertBefore(task, realTask);
-        } else {
-            project.appendChild(task);
-        }
+        realTask != null ? project.insertBefore(task, realTask) : project.appendChild(task);
         return input;
     }
 
-    /*
-    Responsibility: append checkbox & input task title (realTask) to task 
-                    and append this task to project
-    */
     const addTask = (task, input, project) => {
         const realTask = document.querySelector(`div.${project.classList[1]}.real-task`);
         const title = document.createElement('p');
-        if (input.length > 13) {
-            input = input.slice(0, 13) + '...';
-        } else if (input.length == 0) {
-            input = "Untitled";
-        }
-        title.textContent = input;
-        task.innerHTML = '';
-        task.appendChild(checkboxIcon());
-        task.appendChild(title).classList.add('task-title');
-        const parent = `${project.classList[1]}`;
-        project.insertBefore(task, realTask).classList.add('real-task', parent);
+        if (input.length == 0) {
+            setTimeout(() => {
+                task.remove();
+            }, 1000);
+            
+            // input = "Untitled";
+        } else {
+            if (input.length > 13) {
+                input = input.slice(0, 13) + '...';
+            }
+            title.textContent = input;
+            task.innerHTML = '';
+            task.appendChild(checkboxIcon());
+            task.appendChild(title).classList.add('task-title');
 
-        tasks.push(taskObj(parent, input));
+            // every task has parent id
+            const parent = `${project.classList[1]}`;
+            project.insertBefore(task, realTask).classList.add('real-task', parent);
+            realTask == null ? id = `task-1`: id = `task-${realTask.length}`; // bug here
+            setTask(parent, id, input);
+        }
     }
   
     return { addTaskBtn }
@@ -134,10 +105,12 @@ exports.projectBoard = () => {
     */
     const createProject = () => {
         const tab = projectTab();
+        const title = "Summer '21";
         tab.projectTitle.innerHTML = "Summer '21";
         const uniq = 'id' + (new Date()).getTime();
-        getProjectId(tab.project, uniq);
+        const id = getProjectId(tab.project, uniq);
         taskItem().addTaskBtn(tab.project);
+        setProject(id, "Summer '21", [])
 
         return tab;
     }
@@ -161,10 +134,12 @@ exports.projectBoard = () => {
         input.addEventListener('keyup', e => {
             e.preventDefault();
             if (e.keyCode === 13) {
-                newTab.projectTitle.innerHTML = input.value;
+                const title = input.value;
+                newTab.projectTitle.innerHTML = title;
                 const uniq = 'id' + (new Date()).getTime();
-                getProjectId(newTab.project, uniq)
+                const id = getProjectId(newTab.project, uniq)
                 taskItem().addTaskBtn(newTab.project);
+                setProject(id, title, []);
             }
         })
     }
@@ -174,8 +149,7 @@ exports.projectBoard = () => {
         const projectId = `project-${projects.indexOf(id)}`
         // console.log(projects);
         project.classList.add(projectId);
-
-        allProjects.push(projectObj(projectId, projectId, tasks))
+        return projectId;
     }
     
     return { createProject, addProjectBtn }

@@ -13,4 +13,6 @@ const main = document.createElement('main');
 main.appendChild(projectBoard().createProject().project).classList.add('project');
 main.appendChild(projectBoard().addProjectBtn().project).classList.add('project');
 
+storage();
+
 document.body.appendChild(main).classList.add('main');
