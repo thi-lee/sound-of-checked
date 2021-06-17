@@ -47,33 +47,34 @@ const taskItem = () => {
             }
         });
 
-        const realTask = document.querySelector(`div.${project.classList[1]}.real-task`);
+        const realTask = document.querySelector(`div#${project.id}.project.real-task`);
         realTask != null ? project.insertBefore(task, realTask) : project.appendChild(task);
         return input;
     }
 
     const addTask = (task, input, project) => {
-        const realTask = document.querySelector(`div.${project.classList[1]}.real-task`);
+        console.log(project.id);
+        const realTask = document.querySelectorAll(`div#${project.id}.project.real-task`);
+        console.log(`real task ${JSON.stringify(realTask)}`)
         const title = document.createElement('p');
         if (input.length == 0) {
             setTimeout(() => {
                 task.remove();
             }, 1000);
-            
-            // input = "Untitled";
         } else {
+            task.innerHTML = '';
             if (input.length > 13) {
                 input = input.slice(0, 13) + '...';
-            }
+            } // conditions for input
             title.textContent = input;
-            task.innerHTML = '';
             task.appendChild(checkboxIcon());
             task.appendChild(title).classList.add('task-title');
 
             // every task has parent id
-            const parent = `${project.classList[1]}`;
-            project.insertBefore(task, realTask).classList.add('real-task', parent);
-            realTask == null ? id = `task-1`: id = `task-${realTask.length}`; // bug here
+            const parent = `${project.id}`;
+            const id = 'id' + (new Date()).getTime();
+            task.setAttribute('id', id);
+            project.insertBefore(task, realTask[0]).classList.add('real-task', parent);
             setTask(parent, id, input);
         }
     }
@@ -107,10 +108,10 @@ exports.projectBoard = () => {
         const tab = projectTab();
         const title = "Summer '21";
         tab.projectTitle.innerHTML = "Summer '21";
-        const uniq = 'id' + (new Date()).getTime();
-        const id = getProjectId(tab.project, uniq);
+        const id = 'id' + (new Date()).getTime();
+        tab.project.setAttribute('id', id);
         taskItem().addTaskBtn(tab.project);
-        setProject(id, "Summer '21", [])
+        setProject(id, title, [])
 
         return tab;
     }
@@ -136,20 +137,12 @@ exports.projectBoard = () => {
             if (e.keyCode === 13) {
                 const title = input.value;
                 newTab.projectTitle.innerHTML = title;
-                const uniq = 'id' + (new Date()).getTime();
-                const id = getProjectId(newTab.project, uniq)
+                const id = 'id' + (new Date()).getTime();
+                newTab.project.setAttribute('id', id);
                 taskItem().addTaskBtn(newTab.project);
                 setProject(id, title, []);
             }
         })
-    }
-
-    const getProjectId = (project, id) => {
-        projects.push(id);
-        const projectId = `project-${projects.indexOf(id)}`
-        // console.log(projects);
-        project.classList.add(projectId);
-        return projectId;
     }
     
     return { createProject, addProjectBtn }
