@@ -83,7 +83,7 @@ const taskItem = () => {
         }
     }
   
-    return { addTaskBtn }
+    return { checkboxIcon, taskTab, addTask, addTaskBtn }
 }
 
 const projectItem = () => {
@@ -146,6 +146,27 @@ exports.defaultProject = () => {
         main.appendChild(projectItem().addProjectBtn().project).classList.add('project');
         setProject(id, "Summer '21", [])
     } else {
-        console.log(JSON.stringify(projects));
+        const main = document.querySelector('.main');
+        projects.forEach(project => {
+            const newProject = projectItem().projectTab();
+            newProject.projectTitle.innerHTML = project.title;
+            newProject.project.id = project.id;
+            taskItem().addTaskBtn(newProject.project);
+            project.tasks.forEach(task => {
+                console.log(`${project.title} tasks = ${JSON.stringify(task)}`);
+                const newTask = taskItem().taskTab();
+
+                const title = document.createElement('p');
+                newTask.innerHTML = '';
+                title.textContent = task.title;
+                newTask.id = task.id;
+                newTask.classList.add(task.parent);
+                newTask.appendChild(taskItem().checkboxIcon());
+                newTask.appendChild(title).classList.add('task-title');
+                newProject.project.appendChild(newTask).classList.add('real-task');
+            });
+            main.appendChild(newProject.project).classList.add('project');
+        });
+        main.appendChild(projectItem().addProjectBtn().project).classList.add('project');
     }
 };
