@@ -1,6 +1,7 @@
 const storage = require('./localStorage');
 const setProject = storage.storage().setProject;
 const setTask = storage.storage().setTask;
+const deleteTask = storage.storage().deleteTask;
 
 const taskItem = () => {
     // template for task tab
@@ -18,6 +19,7 @@ const taskItem = () => {
             const checkboxParent = checkbox.parentNode;
             const sibling = checkbox.nextElementSibling;
             sibling.classList.add('strike-through');
+            deleteTask(checkboxParent.classList[1], checkboxParent.id);
             setTimeout(() => checkboxParent.remove(), 500);
       })
       return checkbox;
@@ -153,7 +155,7 @@ exports.defaultProject = () => {
             newProject.project.id = project.id;
             taskItem().addTaskBtn(newProject.project);
             project.tasks.forEach(task => {
-                console.log(`${project.title} tasks = ${JSON.stringify(task)}`);
+                // console.log(`${project.title} tasks = ${JSON.stringify(task)}`);
                 const newTask = taskItem().taskTab();
 
                 const title = document.createElement('p');

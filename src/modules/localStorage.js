@@ -20,9 +20,20 @@ exports.storage = () => {
         const taskParent = task.parent;
         const projects = JSON.parse(localStorage.getItem('projects'));
         const result = projects.find(project => project.id == taskParent);
-        result.tasks.push(task);
+        result.tasks.unshift(task);
         localStorage.setItem('projects', JSON.stringify(projects));
     }
 
-    return { setProject, setTask };
+    const removeItem = (arr, value) => {
+        return arr.filter(item => item.id != value);
+    }
+
+    const deleteTask = (parent, id) => {
+        const projects = JSON.parse(localStorage.getItem('projects'));
+        let result = projects.find(project => project.id == parent);
+        result.tasks = removeItem(result.tasks, id);
+        localStorage.setItem('projects', JSON.stringify(projects));
+    }
+
+    return { setProject, setTask, deleteTask };
 };
