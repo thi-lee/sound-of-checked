@@ -2,8 +2,6 @@ const storage = require('./localStorage');
 const setProject = storage.storage().setProject;
 const setTask = storage.storage().setTask;
 
-const projects = [];
-
 const taskItem = () => {
     // template for task tab
     const taskTab = () => {
@@ -40,6 +38,9 @@ const taskItem = () => {
         input.setAttribute('type', 'text');
         task.appendChild(input).classList.add('input', 'task-input');
 
+        const realTask = document.querySelector(`div.task.real-task.${project.id}`);
+        realTask != null ? project.insertBefore(task, realTask) : project.appendChild(task);
+
         input.addEventListener('keyup', (e) => {
             e.preventDefault();
             if (e.keyCode === 13) {
@@ -47,15 +48,23 @@ const taskItem = () => {
             }
         });
 
-        const realTask = document.querySelector(`div#${project.id}.project.real-task`);
-        realTask != null ? project.insertBefore(task, realTask) : project.appendChild(task);
         return input;
     }
 
+    const taskId = (task, input, project) => {
+        const id = 'id' + (new Date()).getTime();
+        const parent = `${project.id}`;
+        task.setAttribute('id', id);
+        task.classList.add(parent);
+
+        const realTask = document.querySelector(`div.task.real-task.${project.id}`);
+        project.insertBefore(task, realTask).classList.add('real-task', parent);
+
+        setTask(parent, id, input);
+    }
+
     const addTask = (task, input, project) => {
-        console.log(project.id);
-        const realTask = document.querySelectorAll(`div#${project.id}.project.real-task`);
-        console.log(`real task ${JSON.stringify(realTask)}`)
+        // const realTask = document.querySelectorAll(`div#${project.id}.project.real-task`);
         const title = document.createElement('p');
         if (input.length == 0) {
             setTimeout(() => {
@@ -70,23 +79,15 @@ const taskItem = () => {
             task.appendChild(checkboxIcon());
             task.appendChild(title).classList.add('task-title');
 
-            // every task has parent id
-            const parent = `${project.id}`;
-            const id = 'id' + (new Date()).getTime();
-            task.setAttribute('id', id);
-            project.insertBefore(task, realTask[0]).classList.add('real-task', parent);
-            setTask(parent, id, input);
+            taskId(task, input, project);
         }
     }
   
     return { addTaskBtn }
 }
 
-exports.projectBoard = () => {
-
-    /*
-    Responsibility: project tab skeleton
-    */
+const projectItem = () => {
+    // template for project item
     const projectTab = () => {
         const project = document.createElement('div');
         project.classList.add('project');
@@ -100,22 +101,6 @@ exports.projectBoard = () => {
         return { project, projectHeader, projectTitle };
     }
 
-    /*
-    Every project, except add-project button, will have an add-task button
-    Responsibility: 
-    */
-    const createProject = () => {
-        const tab = projectTab();
-        const title = "Summer '21";
-        tab.projectTitle.innerHTML = "Summer '21";
-        const id = 'id' + (new Date()).getTime();
-        tab.project.setAttribute('id', id);
-        taskItem().addTaskBtn(tab.project);
-        setProject(id, title, [])
-
-        return tab;
-    }
-
     const addProjectBtn = () => {
         const tab = projectTab();
         tab.projectTitle.innerHTML = '<i class="fa fa-plus"></i>';
@@ -125,10 +110,9 @@ exports.projectBoard = () => {
     }
 
     const projectInput = (tab) => {
+        const newTab = projectTab();
         const input = document.createElement('input');
         input.setAttribute('type', 'text');
-
-        const newTab = projectTab();
         newTab.projectTitle.appendChild(input).classList.add('input', 'project-input');
         document.querySelector('.main').insertBefore(newTab.project, tab.project);
 
@@ -144,6 +128,24 @@ exports.projectBoard = () => {
             }
         })
     }
-    
-    return { createProject, addProjectBtn }
+    return { projectTab, addProjectBtn }
 }
+
+exports.defaultProject = () => {
+    let projects = JSON.parse(localStorage.getItem('projects')) || [];
+    if (projects.toString() === [].toString()) {
+        const newProject = projectItem().projectTab();
+        newProject.projectTitle.innerHTML = "Summer '21";
+
+        const id = 'id' + (new Date()).getTime();
+        newProject.project.setAttribute('id', id);
+        taskItem().addTaskBtn(newProject.project);
+
+        const main = document.querySelector('.main');
+        main.appendChild(newProject.project).classList.add('project');
+        main.appendChild(projectItem().addProjectBtn().project).classList.add('project');
+        setProject(id, "Summer '21", [])
+    } else {
+        console.log(JSON.stringify(projects));
+    }
+};
