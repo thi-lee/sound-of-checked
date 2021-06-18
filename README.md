@@ -22,7 +22,7 @@
 
 ### The challenge
 
-I spent a lot of time trying to figure out how to have an array and push tasks of each project to its appropriate project parent. 
+My own perfectionist charater
 
 ### Links
 
@@ -45,9 +45,13 @@ Coming soon
 
 ### Continued development
 
-Saving data to localStorage so when user reload the page, whatever they have input won't go lost.
+[X] Saving data to localStorage so when user reload the page, whatever they have input won't go lost.
 
-Make the website responsive
+[X] Make the website responsive
+
+[] Edit task and project titles
+
+[] Remove project 
 
 ### Useful resources
 
