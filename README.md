@@ -1,11 +1,8 @@
 # Sound of checked! 
 
-## Demo
-
-![Sound of checked Demo](demo/app-demo.gif)
-
 ## Table of contents
 
+- [Demo](#demo)
 - [Overview](#overview)
   - [The challenge](#the-challenge)
   - [Links](#links)
@@ -17,6 +14,10 @@
   - [Color Reference](#color-reference)
 - [Author](#author)
 - [Acknowledgments](#acknowledgments)
+
+## Demo
+
+![Sound of checked Demo](demo/app-demo.gif)
 
 ## Overview
 
