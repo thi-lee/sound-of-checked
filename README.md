@@ -45,13 +45,13 @@ Coming soon
 
 ### Continued development
 
-[X] Saving data to localStorage so when user reload the page, whatever they have input won't go lost.
+- ~~Saving data to localStorage so when user reload the page, whatever they have input won't go lost.~~
 
-[X] Make the website responsive
+- ~~Make the website responsive~~
 
-[] Edit task and project titles
+- Edit task and project titles
 
-[] Remove project 
+- Remove project 
 
 ### Useful resources
 
