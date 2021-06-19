@@ -5,8 +5,9 @@
     --text-color: #1a2311;
     --eggshell-task-background: #d1c6ba;
     --bone-task-hover: #c0c7c6;
-    --project-width: 200px;
+    --project-width: 450px;
     --task-width: calc(var(--project-width) - 20px);
+    --border-radius: 7px;
 }
 
 html, body {
@@ -32,9 +33,9 @@ h1 {
 .main {
     height: 550px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: flex-start;
-    align-items: baseline;
+    align-items: center;
     overflow: auto;
     white-space: nowrap;
 }
@@ -51,7 +52,7 @@ h1 {
 .project {
     width: var(--project-width);
     background-color: var(--beige-project-background);
-    border-radius: 5px;
+    border-radius: var(--border-radius);
     padding: 10px;
     display: flex;
     flex-direction: column;
@@ -62,15 +63,15 @@ h1 {
 .project-header {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    align-items: baseline;
-    width: 200px;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }
 
 .add-project {
     cursor: pointer;
     justify-content: center;
-    width: 200px;
+    width: 100%;
     height: 45px;
 }
 
@@ -83,7 +84,7 @@ h1 {
 .btn {
     border: none;
     padding: 8px;
-    border-radius: 5px;
+    border-radius: var(--border-radius);
     background-color: var(--eggshell-task-background);
 }
 
@@ -110,7 +111,7 @@ h1 {
 .task {
     height: 25px;
     background-color: var(--eggshell-task-background);
-    border-radius: 5px;
+    border-radius: var(--border-radius);
     width: var(--task-width);
     padding: 5px 10px 5px 10px;
     text-align: left;
@@ -149,10 +150,15 @@ h1 {
     font-family: 'Roboto Mono', monospace;
     background: transparent;
     border: none;
+    width: 100%;
 }
 
 .input:focus {
     outline: none;
+}
+
+input[type="text" i] {
+    padding: 0 2px;
 }
 
 .project-input {

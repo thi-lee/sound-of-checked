@@ -11,7 +11,6 @@ const taskItem = () => {
         return task;
     }
 
-    // TO-DO need to remove from local storage 
     const checkboxIcon = () => {
         const checkbox = document.createElement('div');
         checkbox.classList.add('checkbox');
@@ -66,7 +65,6 @@ const taskItem = () => {
     }
 
     const addTask = (task, input, project) => {
-        // const realTask = document.querySelectorAll(`div#${project.id}.project.real-task`);
         const title = document.createElement('p');
         if (input.length == 0) {
             setTimeout(() => {
@@ -76,7 +74,7 @@ const taskItem = () => {
             task.innerHTML = '';
             if (input.length > 13) {
                 input = input.slice(0, 13) + '...';
-            } // conditions for input
+            } 
             title.textContent = input;
             task.appendChild(checkboxIcon());
             task.appendChild(title).classList.add('task-title');
@@ -155,7 +153,6 @@ exports.defaultProject = () => {
             newProject.project.id = project.id;
             taskItem().addTaskBtn(newProject.project);
             project.tasks.forEach(task => {
-                // console.log(`${project.title} tasks = ${JSON.stringify(task)}`);
                 const newTask = taskItem().taskTab();
 
                 const title = document.createElement('p');
