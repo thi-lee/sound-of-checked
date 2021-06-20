@@ -4,6 +4,7 @@ const setTask = storage.storage().setTask;
 const deleteTask = storage.storage().deleteTask;
 
 const taskItem = () => {
+    let fromStorage = true;
     // template for task tab
     const taskTab = () => {
         const task = document.createElement('div');
@@ -29,6 +30,7 @@ const taskItem = () => {
         task.innerHTML = '<i class="fa fa-plus"></i>';
         project.appendChild(task).classList.add('add-task');
         task.addEventListener('click', () => {
+            fromStorage = false;
             taskInput(taskTab(), project);
         })
         return task;
@@ -61,7 +63,9 @@ const taskItem = () => {
         const realTask = document.querySelector(`div.task.real-task.${project.id}`);
         project.insertBefore(task, realTask).classList.add('real-task', parent);
 
-        setTask(parent, id, input);
+        if (!fromStorage) {
+            setTask(parent, id, input);
+        }
     }
 
     const addTask = (task, input, project) => {
@@ -83,7 +87,7 @@ const taskItem = () => {
         }
     }
   
-    return { checkboxIcon, taskTab, addTask, addTaskBtn }
+    return { checkboxIcon, taskTab, addTask, addTaskBtn, fromStorage }
 }
 
 const projectItem = () => {
@@ -128,44 +132,39 @@ const projectItem = () => {
             }
         })
     }
-    return { projectTab, addProjectBtn }
+
+    const addProject = (id, title) => {
+        const project = projectItem().projectTab();
+        project.projectTitle.innerHTML = title;
+        project.project.id = id;
+        taskItem().addTaskBtn(project.project);
+
+        return project;
+    }
+    return { projectTab, addProjectBtn, projectInput, addProject }
 }
 
 exports.defaultProject = () => {
     let projects = JSON.parse(localStorage.getItem('projects')) || [];
+    const main = document.querySelector('.main');
     if (projects.toString() === [].toString()) {
-        const newProject = projectItem().projectTab();
-        newProject.projectTitle.innerHTML = "Summer '21";
-
+        const title = "Summer '21";
         const id = 'id' + (new Date()).getTime();
-        newProject.project.setAttribute('id', id);
-        taskItem().addTaskBtn(newProject.project);
-
-        const main = document.querySelector('.main');
+        
+        const newProject = projectItem().addProject(id, title);
+        setProject(id, title, []);
+        
         main.appendChild(newProject.project).classList.add('project');
-        main.appendChild(projectItem().addProjectBtn().project).classList.add('project');
-        setProject(id, "Summer '21", [])
     } else {
-        const main = document.querySelector('.main');
         projects.forEach(project => {
-            const newProject = projectItem().projectTab();
-            newProject.projectTitle.innerHTML = project.title;
-            newProject.project.id = project.id;
-            taskItem().addTaskBtn(newProject.project);
+            const newProject = projectItem().addProject(project.id, project.title);
             project.tasks.forEach(task => {
+                taskItem().fromStorage = true;
                 const newTask = taskItem().taskTab();
-
-                const title = document.createElement('p');
-                newTask.innerHTML = '';
-                title.textContent = task.title;
-                newTask.id = task.id;
-                newTask.classList.add(task.parent);
-                newTask.appendChild(taskItem().checkboxIcon());
-                newTask.appendChild(title).classList.add('task-title');
-                newProject.project.appendChild(newTask).classList.add('real-task');
+                taskItem().addTask(newTask, task.title, newProject.project);
             });
             main.appendChild(newProject.project).classList.add('project');
         });
-        main.appendChild(projectItem().addProjectBtn().project).classList.add('project');
-    }
+    };
+    main.appendChild(projectItem().addProjectBtn().project).classList.add('project');
 };

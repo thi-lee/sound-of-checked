@@ -97,6 +97,8 @@ h1 {
     margin-top: 0px;
     margin-bottom: 0px;
     padding: 10px 0 10px 5px;
+    width: 100%;
+    text-align: center;
 }
 
 .checkbox {
@@ -164,6 +166,7 @@ input[type="text" i] {
 .project-input {
     font-size: 20px;
     padding: 0;
+    text-align: center;
 }
 
 @media (max-width: 800px) {

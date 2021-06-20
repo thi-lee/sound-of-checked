@@ -25,7 +25,7 @@ exports.storage = () => {
     }
 
     const removeItem = (arr, value) => {
-        return arr.filter(item => item.id != value);
+        return arr.filter(item => {item.id != value});
     }
 
     const deleteTask = (parent, id) => {
