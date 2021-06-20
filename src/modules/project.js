@@ -1,11 +1,20 @@
-const storage = require('./localStorage');
-const setProject = storage.storage().setProject;
-const setTask = storage.storage().setTask;
-const deleteTask = storage.storage().deleteTask;
+import { storage } from './localStorage';
+const setProject = storage().setProject;
+const setTask = storage().setTask;
+const deleteTask = storage().deleteTask;
+
+/*
+@task: task template 
+@project: project template
+*/
 
 const taskItem = () => {
+    /*
+    TODO: consider storing project into a variable and use through out 
+          maybe make it an argument for taskItem()
+    */
     let fromStorage = true;
-    // template for task tab
+    
     const taskTab = () => {
         const task = document.createElement('div');
         task.classList.add('task');
@@ -15,14 +24,16 @@ const taskItem = () => {
     const checkboxIcon = () => {
         const checkbox = document.createElement('div');
         checkbox.classList.add('checkbox');
-        checkbox.addEventListener('click', () => {
-            const checkboxParent = checkbox.parentNode;
-            const sibling = checkbox.nextElementSibling;
-            sibling.classList.add('strike-through');
-            deleteTask(checkboxParent.classList[1], checkboxParent.id);
-            setTimeout(() => checkboxParent.remove(), 500);
-      })
+        checkbox.addEventListener('click', () => checkboxLogic(checkbox));
       return checkbox;
+    }
+    // TODO: delete function still has bugs
+    const checkboxLogic = (checkbox) => {
+        const checkboxParent = checkbox.parentNode;
+        const sibling = checkbox.nextElementSibling;
+        sibling.classList.add('strike-through');
+        deleteTask(checkboxParent.classList[1], checkboxParent.id);
+        setTimeout(() => checkboxParent.remove(), 500);
     }
 
     const addTaskBtn = (project) => {
@@ -31,6 +42,7 @@ const taskItem = () => {
         project.appendChild(task).classList.add('add-task');
         task.addEventListener('click', () => {
             fromStorage = false;
+            // instead of using task declared above, I need to create a new task tab
             taskInput(taskTab(), project);
         })
         return task;
@@ -39,11 +51,14 @@ const taskItem = () => {
     const taskInput = (task, project) => {
         const input = document.createElement('input');
         input.setAttribute('type', 'text');
+        input.placeholder = 'Task title must have less than 40 characters'
         task.appendChild(input).classList.add('input', 'task-input');
 
+        // figure out where to put the new input task
         const realTask = document.querySelector(`div.task.real-task.${project.id}`);
         realTask != null ? project.insertBefore(task, realTask) : project.appendChild(task);
 
+        // TODO: consider separating this to a new function
         input.addEventListener('keyup', (e) => {
             e.preventDefault();
             if (e.keyCode === 13) {
@@ -54,10 +69,38 @@ const taskItem = () => {
         return input;
     }
 
+    // TODO: this function is doing too much
+    const addTask = (task, input, project) => {
+        const title = document.createElement('p');
+        // what to do when user click add task but doesn't do anything? 
+        if (input.length == 0) {
+            setTimeout(() => {
+                task.remove();
+            }, 1000);
+        } 
+        if (validTaskInput(input)) {
+            task.innerHTML = '';
+            title.textContent = input;
+            task.appendChild(checkboxIcon());
+            task.appendChild(title).classList.add('task-title', 'title');
+
+            taskId(task, input, project);
+        }
+    }
+
+    // TODO: add more conditions for input
+    const validTaskInput = (input) => {
+        let isValid = false;
+        if (input.length <= 40) {
+            isValid = true;
+        }
+        return isValid;
+    }
+
     const taskId = (task, input, project) => {
         const id = 'id' + (new Date()).getTime();
         const parent = `${project.id}`;
-        task.setAttribute('id', id);
+        task.id = id;
         task.classList.add(parent);
 
         const realTask = document.querySelector(`div.task.real-task.${project.id}`);
@@ -68,103 +111,110 @@ const taskItem = () => {
         }
     }
 
-    const addTask = (task, input, project) => {
-        const title = document.createElement('p');
-        if (input.length == 0) {
-            setTimeout(() => {
-                task.remove();
-            }, 1000);
-        } else {
-            task.innerHTML = '';
-            if (input.length > 13) {
-                input = input.slice(0, 13) + '...';
-            } 
-            title.textContent = input;
-            task.appendChild(checkboxIcon());
-            task.appendChild(title).classList.add('task-title');
-
-            taskId(task, input, project);
-        }
+    const editTitle = () => {
+        const titles = document.querySelectorAll('.title');
+        titles.forEach(title => {
+            title.addEventListener('click', () => {
+                if (title.classList.contains('project-title')) {
+                    console.log('this is project');
+                } else {
+                    const task = title.parentNode;
+                    const project = task.parentNode;
+                    const currentValue = title.textContent;
+                    title.innerHTML = '';
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.value = currentValue;
+                    task.appendChild(input).classList.add('input', 'task-input');
+                    input.addEventListener('keyup', (e) => {
+                        e.preventDefault();
+                        if (e.keyCode === 13) {
+                            addTask(task, input.value, project);
+                        }
+                    });
+                }
+            });
+        })
     }
   
-    return { checkboxIcon, taskTab, addTask, addTaskBtn, fromStorage }
+    return { fromStorage, taskTab, addTask, addTaskBtn, editTitle }
 }
 
 const projectItem = () => {
     // template for project item
     const projectTab = () => {
-        const project = document.createElement('div');
-        project.classList.add('project');
+        const main = document.createElement('div');
+        main.classList.add('project');
 
-        const projectHeader = document.createElement('div');
-        projectHeader.classList.add('project-header');
-        const projectTitle = document.createElement('h3');
-        projectHeader.appendChild(projectTitle).classList.add('project-title');
-        project.appendChild(projectHeader);
+        const header = document.createElement('div');
+        main.appendChild(header).classList.add('project-header');
+        const title = document.createElement('h3');
+        header.appendChild(title).classList.add('project-title', 'title');
         
-        return { project, projectHeader, projectTitle };
+        return { main, header, title };
     }
 
     const addProjectBtn = () => {
-        const tab = projectTab();
-        tab.projectTitle.innerHTML = '<i class="fa fa-plus"></i>';
-        tab.projectHeader.classList.add('add-project');
-        tab.project.addEventListener('click', () => projectInput(tab))
-        return tab;
+        const project = projectTab();
+        project.title.innerHTML = '<i class="fa fa-plus"></i>';
+        project.header.classList.add('add-project');
+        project.main.addEventListener('click', () => projectInput(project))
+        return project;
     }
 
-    const projectInput = (tab) => {
-        const newTab = projectTab();
+    const projectInput = (project) => {
+        const newProject = projectTab();
         const input = document.createElement('input');
         input.setAttribute('type', 'text');
-        newTab.projectTitle.appendChild(input).classList.add('input', 'project-input');
-        document.querySelector('.main').insertBefore(newTab.project, tab.project);
+        input.placeholder = 'Project title must have less than 20 characters';
+        newProject.title.appendChild(input).classList.add('input', 'project-input');
+        document.querySelector('.main').insertBefore(newProject.main, project.main);
 
         input.addEventListener('keyup', e => {
             e.preventDefault();
             if (e.keyCode === 13) {
-                const title = input.value;
-                newTab.projectTitle.innerHTML = title;
                 const id = 'id' + (new Date()).getTime();
-                newTab.project.setAttribute('id', id);
-                taskItem().addTaskBtn(newTab.project);
+                newProject.main.id = id;
+                const title = input.value;
+                newProject.title.innerHTML = title;
+                taskItem().addTaskBtn(newProject.main);
                 setProject(id, title, []);
             }
         })
     }
 
     const addProject = (id, title) => {
-        const project = projectItem().projectTab();
-        project.projectTitle.innerHTML = title;
-        project.project.id = id;
-        taskItem().addTaskBtn(project.project);
+        const project = projectTab();
+        project.title.innerHTML = title;
+        project.main.id = id;
+        taskItem().addTaskBtn(project.main);
 
         return project;
     }
-    return { projectTab, addProjectBtn, projectInput, addProject }
+    return { addProjectBtn, addProject }
 }
 
-exports.defaultProject = () => {
+export function defaultProject() {
     let projects = JSON.parse(localStorage.getItem('projects')) || [];
     const main = document.querySelector('.main');
     if (projects.toString() === [].toString()) {
         const title = "Summer '21";
         const id = 'id' + (new Date()).getTime();
-        
+
         const newProject = projectItem().addProject(id, title);
         setProject(id, title, []);
         
-        main.appendChild(newProject.project).classList.add('project');
+        main.appendChild(newProject.main).classList.add('project');
     } else {
         projects.forEach(project => {
             const newProject = projectItem().addProject(project.id, project.title);
             project.tasks.forEach(task => {
                 taskItem().fromStorage = true;
                 const newTask = taskItem().taskTab();
-                taskItem().addTask(newTask, task.title, newProject.project);
+                taskItem().addTask(newTask, task.title, newProject.main);
             });
-            main.appendChild(newProject.project).classList.add('project');
+            main.appendChild(newProject.main).classList.add('project');
         });
-    };
-    main.appendChild(projectItem().addProjectBtn().project).classList.add('project');
-};
+    }
+    main.insertBefore(projectItem().addProjectBtn().main, null).classList.add('project');
+}

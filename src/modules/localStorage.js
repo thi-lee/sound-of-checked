@@ -1,4 +1,4 @@
-exports.storage = () => {
+export function storage() {
     const sampleProject = (id, title, tasks) => {
         const project = { 'id': id, 'title': title, 'tasks': tasks }
         return project;
@@ -25,7 +25,7 @@ exports.storage = () => {
     }
 
     const removeItem = (arr, value) => {
-        return arr.filter(item => {item.id != value});
+        return arr.filter(item => item.id != value);
     }
 
     const deleteTask = (parent, id) => {
@@ -36,4 +36,4 @@ exports.storage = () => {
     }
 
     return { setProject, setTask, deleteTask };
-};
+}
