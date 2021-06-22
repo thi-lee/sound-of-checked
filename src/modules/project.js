@@ -2,7 +2,7 @@ import { storage } from './localStorage';
 const setProject = storage().setProject;
 const setTask = storage().setTask;
 const deleteTask = storage().deleteTask;
-
+const editTask = storage().editTask;
 /*
 @task: task template 
 @project: project template
@@ -118,6 +118,7 @@ const taskItem = () => {
                 if (title.classList.contains('project-title')) {
                     console.log('this is project');
                 } else {
+                    console.log('this is task');
                     const task = title.parentNode;
                     const project = task.parentNode;
                     const currentValue = title.textContent;
@@ -129,7 +130,8 @@ const taskItem = () => {
                     input.addEventListener('keyup', (e) => {
                         e.preventDefault();
                         if (e.keyCode === 13) {
-                            addTask(task, input.value, project);
+                            console.log(task.id)
+                            editTask(project.id, task.id, input);
                         }
                     });
                 }
@@ -217,4 +219,5 @@ export function defaultProject() {
         });
     }
     main.insertBefore(projectItem().addProjectBtn().main, null).classList.add('project');
+    taskItem().editTitle();
 }

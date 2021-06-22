@@ -35,5 +35,12 @@ export function storage() {
         localStorage.setItem('projects', JSON.stringify(projects));
     }
 
-    return { setProject, setTask, deleteTask };
+    const editTask = (parent, id, title) => {
+        const projects = JSON.parse(localStorage.getItem('projects'));
+        const project = projects.find(project => project.id == parent);
+        const task = project.tasks;
+        console.log(task);
+    }
+
+    return { setProject, setTask, deleteTask, editTask };
 }
