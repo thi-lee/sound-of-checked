@@ -27,7 +27,7 @@ My own perfectionist charater
 
 ### Links
 
-- Live Site URL: [Sound of checked](https://thi-lee.github.io/sound-of-checked/)
+- Live Site URL: [Sound of checked](https://thi-lehoangy.github.io/sound-of-checked/)
 
 ## My process
 
